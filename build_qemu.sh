@@ -8,7 +8,7 @@ sudo mkdir -p $RISCV_QEMU
 
 #git clone https://github.com/qemu/qemu.git
 cd qemu
-git checkout v10.0.3
+git checkout v10.1.3
 
 mkdir -p build && cd build
 ../configure \
