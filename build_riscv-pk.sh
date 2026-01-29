@@ -11,6 +11,7 @@ sudo mkdir -p $RISCV_PK
 
 [ -d "riscv-pk" ] || git clone https://github.com/riscv/riscv-pk.git
 cd riscv-pk
+git checkout master
 mkdir -p build_bare_metal && cd build_bare_metal
 ../configure --prefix=$RISCV_PK --host=riscv64-unknown-elf
 make -j$(nproc)

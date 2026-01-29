@@ -15,18 +15,22 @@ else
   echo "riscv-gnu-toolchain already exists, skipping clone."
 fi
 cd riscv-gnu-toolchain
-git submodule update --init gcc binutils glibc linux-headers gdb
+git submodule update --init gcc
 
-RISCV_LINUX=${RISCV}/gnu_toolchain_linux
-mkdir -p build-linux && cd build-linux
+RISCV_NEWLIB=${RISCV}/gnu_toolchain_newlib
+mkdir -p build-newlib && cd build-newlib
 
 GDB_NATIVE_FLAGS_EXTRA="--with-python=/usr --with-expat --with-system-readline"
 GDB_TARGET_FLAGS_EXTRA="--with-python=/usr --with-expat --with-system-readline"
 
 sudo ../configure \
-  --prefix=$RISCV_LINUX \
-  --enable-linux \
+  --prefix=$RISCV_NEWLIB \
+  --disable-linux \
   --enable-multilib \
   --with-languages=c,c++
 
-sudo make -j$(nproc) linux
+sudo make -j$(nproc)
+
+
+cd curDir
+
