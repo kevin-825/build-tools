@@ -1,0 +1,69 @@
+
+# 1. Optimal Performance Group
+# Goal: Maximum execution speed for your firmware. This builds a 
+# toolchain capable of aggressive cross-file optimizations and 
+# schedules instructions for high-performance CPU pipelines.
+../configure \
+  --prefix=$RISCV_NEWLIB_PERFORMANCE \
+  --disable-linux \
+  --enable-multilib \
+  --enable-qemu-system \
+  --with-languages=c,c++ \
+  --with-python=python3 \
+  --with-expat=yes \
+  --with-system-gmp \
+  --with-system-readline \
+  --enable-64-bit-bfd \
+  --enable-source-highlight \
+  --with-cmodel=medany \
+  --enable-gdb-sim \
+  --with-sim \
+  --with-tune=rocket \
+  --with-isa-spec=20191213 \
+  --enable-lto
+
+# 2. Optimal Size Group
+# Goal: Minimum Flash/RAM footprint for your firmware. This tells the compiler 
+# that code density is the priority, ensuring your standard libraries use the 
+# smallest instruction sequences possible.
+../configure \
+  --prefix=$RISCV_NEWLIB_OPTIMAL_SIZE \
+  --disable-linux \
+  --enable-multilib \
+  --enable-qemu-system \
+  --with-languages=c,c++ \
+  --with-python=python3 \
+  --with-expat=yes \
+  --with-system-gmp \
+  --with-system-readline \
+  --enable-64-bit-bfd \
+  --enable-source-highlight \
+  --with-cmodel=medany \
+  --enable-gdb-sim \
+  --with-sim \
+  --with-tune=size
+
+# 3. Standard / All-Rounder Group
+# Goal: Predictability and Balance. This is the "clean" build. It doesn't force
+# the compiler into extreme size or speed behaviors, making it the easiest to use
+# when you are stepping through code in GDB for the first time.
+
+../configure \
+  --prefix=$RISCV_NEWLIB \
+  --disable-linux \
+  --enable-multilib \
+  --enable-qemu-system \
+  --with-languages=c,c++ \
+  --with-cmodel=medany \
+  --with-sim=gdb
+#  --with-tune=size \
+
+#sudo make -j$(nproc)
+make -j$(nproc) \
+  GDB_CONF_FLAGS="--with-python=python3 --with-expat=yes --with-system-gmp --with-system-readline --enable-tui --enable-64-bit-bfd --with-lzma=yes --enable-source-highlight" \
+  2>&1 | tee build_standard.log
+
+echo "Installing to ${RISCV_NEWLIB}..."
+# Use sudo if /mnt/wsl/vhd1/opt/riscv is owned by root
+make install GDB_CONF_FLAGS="--with-python=python3 --with-expat=yes --with-system-gmp --with-system-readline --enable-tui --enable-64-bit-bfd --with-lzma=yes --enable-source-highlight"
+

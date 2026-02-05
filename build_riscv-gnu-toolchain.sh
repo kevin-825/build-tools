@@ -29,4 +29,4 @@ sudo ../configure \
   --enable-multilib \
   --with-languages=c,c++
 
-sudo make -j$(nproc) linux
+#sudo make -j$(nproc) linux

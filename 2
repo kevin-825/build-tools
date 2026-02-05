@@ -1,0 +1,21 @@
+# Rename the real GDB binary to .real
+mv $INSTALL_PREFIX/bin/riscv64-unknown-elf-gdb $INSTALL_PREFIX/bin/riscv64-unknown-elf-gdb.real
+
+# Create the wrapper
+cat << 'EOF' > $INSTALL_PREFIX/bin/riscv64-unknown-elf-gdb
+#!/bin/bash
+# Find where the binary is located
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Fix Python Search Paths (Update version to match your build container)
+export PYTHONHOME="$BIN_DIR/../host_libs/python"
+export PYTHONPATH="$BIN_DIR/../host_libs/python/lib/python3.10"
+
+# Fix Terminal Search Paths
+export TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo"
+
+# Run the real GDB
+exec "$BIN_DIR/riscv64-unknown-elf-gdb.real" "$@"
+EOF
+
+chmod +x $INSTALL_PREFIX/bin/riscv64-unknown-elf-gdb
