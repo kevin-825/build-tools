@@ -169,6 +169,49 @@ README_EOF
         bash -c "$build_cmd_bash"
 }
 
+
+make_ready() {
+    if [ ! -d "$WORKDIR" ]; then
+        echo "working directory does not exist: $WORKDIR"
+        echo " WORKDIR not set, please set it like this: -w|--workdir /mnt/wsl/ramdisk5 "
+        exit 1
+    fi
+    if [ "$INSTALL_PREFIX" == "" ]; then
+        echo " Please set the installation prefix path of riscv-gnu-toolchain:"
+        echo "  -p|--prefix /opt/riscv "
+        exit 1
+    fi
+    myuser=$(id -u)
+    mygrp=$(id -g)
+    sudo chown -R "$myuser:$mygrp" "$WORKDIR"
+    # Prepare the install directory so the Docker user can write to it
+    sudo mkdir -p "$INSTALL_PREFIX"
+    sudo chown -R "$myuser:$mygrp" "$INSTALL_PREFIX"
+
+    if [ -d "$save_src_path/riscv-gnu-toolchain" ] || \
+       [ -f "$save_src_path/riscv-gnu-toolchain.tar.xz" ] || \
+       [ -f "$save_src_path/riscv-gnu-toolchain.tar.gz" ]; then
+        LOCAL_TOOLCHAIN_SRC_PATH="$save_src_path"
+    else
+        #echo "Warning: No valid source (dir or tarball) found in $save_src_path"
+        echo ""
+    fi
+        
+    if [ "$LOCAL_TOOLCHAIN_SRC_PATH" == "" ]; then
+        echo " Please set the local toolchain source path :"
+        echo "  -s local_path_to/riscv-gnu-toolchain "
+        exit 1
+    else
+        if [ "$SRC_READY" == false ]; then
+            copy_toolchain_src_into_workdir
+        else
+            echo "riscv-gnu-toolchain source is ready. No need to copy."
+        fi
+    fi
+}
+
+
+
 argparse() {
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -210,47 +253,6 @@ argparse() {
                 ;;
         esac
     done
-}
-
-
-make_ready() {
-    if [ ! -d "$WORKDIR" ]; then
-        echo "working directory does not exist: $WORKDIR"
-        echo " WORKDIR not set, please set it like this: -w|--workdir /mnt/wsl/ramdisk5 "
-        exit 1
-    fi
-    if [ "$INSTALL_PREFIX" == "" ]; then
-        echo " Please set the installation prefix path of riscv-gnu-toolchain:"
-        echo "  -p|--prefix /opt/riscv "
-        exit 1
-    fi
-    myuser=$(id -u)
-    mygrp=$(id -g)
-    sudo chown -R "$myuser:$mygrp" "$WORKDIR"
-    # Prepare the install directory so the Docker user can write to it
-    sudo mkdir -p "$INSTALL_PREFIX"
-    sudo chown -R "$myuser:$mygrp" "$INSTALL_PREFIX"
-
-    if [ -d "$save_src_path/riscv-gnu-toolchain" ] || \
-       [ -f "$save_src_path/riscv-gnu-toolchain.tar.xz" ] || \
-       [ -f "$save_src_path/riscv-gnu-toolchain.tar.gz" ]; then
-        LOCAL_TOOLCHAIN_SRC_PATH="$save_src_path"
-    else
-        #echo "Warning: No valid source (dir or tarball) found in $save_src_path"
-        echo ""
-    fi
-        
-    if [ "$LOCAL_TOOLCHAIN_SRC_PATH" == "" ]; then
-        echo " Please set the local toolchain source path :"
-        echo "  -s local_path_to/riscv-gnu-toolchain "
-        exit 1
-    else
-        if [ "$SRC_READY" == false ]; then
-            copy_toolchain_src_into_workdir
-        else
-            echo "riscv-gnu-toolchain source is ready. No need to copy."
-        fi
-    fi
 }
 
 main() {
