@@ -3,7 +3,7 @@ set -euo pipefail
 
 #set default values
 WORKDIR="/mnt/wsl/ramdisk5"
-INSTALL_PREFIX="/mnt/wsl/vhd0/opt/riscv/rv_gnu_toolchain_relocated"
+INSTALL_PREFIX="/mnt/wsl/vhd0/opt/riscv/rv_gnu_toolchain_reloc"
 TOOLCHAIN_URL="git@github.com:riscv-collab/riscv-gnu-toolchain.git"
 LOCAL_TOOLCHAIN_SRC_PATH=""
 DRY_RUN=false
@@ -196,18 +196,17 @@ make_ready() {
         #echo "Warning: No valid source (dir or tarball) found in $save_src_path"
         echo ""
     fi
-
-    if [ "$SRC_READY" == true ]; then
-        echo "riscv-gnu-toolchain source is ready. No need to copy."
-        return 0
-    fi
-
+        
     if [ "$LOCAL_TOOLCHAIN_SRC_PATH" == "" ]; then
         echo " Please set the local toolchain source path :"
         echo "  -s local_path_to/riscv-gnu-toolchain "
         exit 1
     else
-        copy_toolchain_src_into_workdir
+        if [ "$SRC_READY" == false ]; then
+            copy_toolchain_src_into_workdir
+        else
+            echo "riscv-gnu-toolchain source is ready. No need to copy."
+        fi
     fi
 }
 
