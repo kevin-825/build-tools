@@ -6,9 +6,15 @@ sudo mkdir -p ${ARM}
 ARM_QEMU=${ARM}/arm_qemu
 sudo mkdir -p $ARM_QEMU
 
-#git clone https://github.com/qemu/qemu.git
+if [ ! -d "./qemu/.git" ]; then
+    echo "QEMU not found. Cloning..."
+    git clone https://github.com/qemu/qemu.git
+else
+    echo "QEMU already exists. Skipping clone."
+fi
+
 cd qemu
-git checkout v10.1.3
+git checkout v10.2.1
 
 mkdir -p build_arm && cd build_arm
 ../configure \
