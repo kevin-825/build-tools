@@ -15,7 +15,7 @@ fi
 cd qemu
 git checkout v10.2.1
 
-mkdir -p build && cd build
+mkdir -p build_riscv && cd build_riscv
 ../configure \
   --target-list=riscv32-softmmu,riscv64-softmmu,riscv32-linux-user,riscv64-linux-user \
   --prefix=$RISCV_QEMU
