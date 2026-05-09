@@ -14,7 +14,7 @@ else
 fi
 
 cd qemu
-git checkout v10.2.1
+git checkout v11.0.0
 
 mkdir -p build_arm && cd build_arm
 ../configure \

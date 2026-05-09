@@ -13,7 +13,7 @@ else
     echo "QEMU already exists. Skipping clone."
 fi
 cd qemu
-git checkout v10.2.1
+git checkout v11.0.0
 
 mkdir -p build_riscv && cd build_riscv
 ../configure \
