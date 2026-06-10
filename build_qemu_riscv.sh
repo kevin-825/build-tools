@@ -4,6 +4,7 @@ RISCV=/hst_root/mnt/wsl/vhd0/opt/riscv
 sudo mkdir -p ${RISCV}
 
 RISCV_QEMU=${RISCV}/riscv_qemu
+sudo rm -rf $RISCV_QEMU
 sudo mkdir -p $RISCV_QEMU
 
 if [ ! -d "./qemu/.git" ]; then
@@ -13,7 +14,7 @@ else
     echo "QEMU already exists. Skipping clone."
 fi
 cd qemu
-git checkout v11.0.0
+git checkout v11.0.1
 
 mkdir -p build_riscv && cd build_riscv
 ../configure \

@@ -4,6 +4,7 @@ ARM=/hst_root/mnt/wsl/vhd0/opt/arm
 sudo mkdir -p ${ARM}
 
 ARM_QEMU=${ARM}/arm_qemu
+sudo rm -rf $ARM_QEMU
 sudo mkdir -p $ARM_QEMU
 
 if [ ! -d "./qemu/.git" ]; then
@@ -14,7 +15,7 @@ else
 fi
 
 cd qemu
-git checkout v11.0.0
+git checkout v11.0.1
 
 mkdir -p build_arm && cd build_arm
 ../configure \
