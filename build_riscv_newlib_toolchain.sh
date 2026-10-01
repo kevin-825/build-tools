@@ -3,12 +3,12 @@ set -euo pipefail
 
 #set default values
 WORKDIR="/mnt/wsl/ramdisk5"
-INSTALL_PREFIX="/mnt/wsl/vhd0/opt/riscv/rv_gnu_toolchain_relocated"
+INSTALL_PREFIX="/mnt/wsl/vhd0/opt/riscv/rv_gnu_toolchain_relocated_u26"
 TOOLCHAIN_URL="git@github.com:riscv-collab/riscv-gnu-toolchain.git"
 LOCAL_TOOLCHAIN_SRC_PATH=""
 DRY_RUN=false
 SRC_READY=false
-BUILD_IMAGE="kflyn825/rv_gnu_toolchain_builder:latest" # Change this to your prebuilt container name
+BUILD_IMAGE="kflyn825/rv_toolchain_builder:latest" # Change this to your prebuilt container name
 save_src_path=/home/kflyn/vhd1
 curDir=$(pwd)
 
@@ -166,7 +166,7 @@ README_EOF
         -v "$INSTALL_PREFIX":"$INSTALL_PREFIX" \
         -w "$WORKDIR/riscv-gnu-toolchain" \
         "$BUILD_IMAGE" \
-        bash -c "$build_cmd_bash"
+        bash -c "sudo chown -R $(id -u):$(id -g) $WORKDIR && sudo chown -R $(id -u):$(id -g) $INSTALL_PREFIX && $build_cmd_bash"
 }
 
 
